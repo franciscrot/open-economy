@@ -161,8 +161,11 @@ const evaluateComputedVariables = (
     if (result.error) {
       log.push(`Formula error for ${id}: ${result.error}`);
       values[id] = 0;
-    } else if (result.value !== undefined) {
+    } else if (result.value !== undefined && Number.isFinite(result.value)) {
       values[id] = result.value;
+    } else {
+      log.push(`Formula error for ${id}: non-finite result`);
+      values[id] = 0;
     }
   }
 
@@ -232,7 +235,7 @@ export const simulateStep = (
     inequalityIndex: nextValues.inequalityIndex ?? 0,
     welfareIndex: nextValues.welfareIndex ?? 0,
     alternativeWelfare: nextValues.alternativeWelfare ?? 0,
-    log: [...prev.log, ...log],
+    log,
   };
 };
 
