@@ -1,31 +1,61 @@
-# Open Economy: Explainable Execution Model
+# Open Economy Lab: A Beginner-Friendly Guide
 
-This repository defines a minimal economic model runtime that makes **explanation, traceability, and interpretability** structural properties of the system.
+Open Economy Lab is a **small, interactive economics sandbox**. It helps you explore how policy choices (like IP rules, open-source adoption, and complementary currencies) affect a two‑sector economy over time. The repository also includes a **Python explainable-execution engine** that records every economic action with transparent reasoning.
 
-## Design Goals
+You can:
+- Run the **React web app** to tweak parameters and watch charts update.
+- Use the **Python runtime** to build your own explainable economic rules and trace their effects.
 
-1. **Causal execution record**
-   - Every economic act produces a structured, human-readable record entry.
-   - Entries point directly at the rule, parameters, and constraints that produced them.
-   - State transitions and intermediate quantities are captured explicitly.
+---
 
-2. **Reasoning view on demand**
-   - Intermediate quantities and blocked acts are surfaced as first-class outputs.
-   - Trade-offs between plural value metrics are explicitly narrated.
+## 1) Quick Start: Interactive Web App
 
-3. **Explanation survives user mutation**
-   - Descriptions and labels are generated dynamically from the model specification.
-   - Renaming a parameter or metric automatically updates the execution record view.
+### Prerequisites
+- Node.js 18+ (for Vite + React)
 
-## Files
+### Run locally
+```bash
+npm install
+npm run dev
+```
 
-- `open_economy/model.py`: core model data structures (rules, constraints, parameters, trade-offs).
-- `open_economy/engine.py`: execution engine that applies rules and records outcomes.
-- `open_economy/record.py`: structured execution record, references, and human-readable output.
-- `open_economy/reasoning.py`: reasoning view for intermediate values, blocked acts, and trade-offs.
+Then open the URL shown in the terminal (usually `http://localhost:5173`).
 
-## Example Usage
+### What you’ll see
+- **Policy presets** to instantly explore different scenarios.
+- **Parameter Studio** to rename parameters, change values, and edit formulas.
+- **Outcome charts** that update after each tweak.
+- **Model Inspector** that shows equations and dependencies in plain language.
 
+---
+
+## 2) How to Use the UI
+
+1. **Pick a preset**
+   - Use the “Policy presets” dropdown to switch between scenarios (e.g., “Open commons acceleration” or “Platform feudalism”).
+
+2. **Edit parameters**
+   - In **Parameter Studio**, update numeric values like “IP protection strength” or “Public R&D funding.”
+
+3. **Edit formulas safely**
+   - Formulas accept only basic math and safe functions (`min`, `max`, `log`, `exp`, `abs`).
+   - If a formula is invalid, you’ll see a warning message and the model falls back to safe defaults.
+
+4. **Read the outputs**
+   - Charts show wages, prices, outputs, innovation, and welfare measures over time.
+   - The **Scenario Log** shows step-by-step results and any formula warnings.
+
+---
+
+## 3) Python Explainable Execution Engine (Optional)
+
+The `open_economy/` package is a minimal economic execution engine focused on **traceability**. Every “act” is logged with:
+- The rule applied
+- The parameters referenced
+- Any constraints that blocked the action
+- State changes and intermediate values
+
+### Example
 ```python
 from open_economy import (
     Constraint,
@@ -89,3 +119,40 @@ record = engine.run((act,), {"available_hours": 3}, {"act-1": ("allocate_care", 
 view = ReasoningView(record, spec)
 print(view.as_dict())
 ```
+
+---
+
+## 4) Project Structure (What’s Where)
+
+### Web app (React + Vite)
+- `src/App.tsx` — Main UI layout and interaction wiring.
+- `src/components/` — UI panels (charts, tooltips, inspector, etc.).
+- `src/model/` — Simulation logic, formulas, and presets.
+
+### Python engine
+- `open_economy/model.py` — Core data structures (rules, parameters, constraints).
+- `open_economy/engine.py` — Execution engine that applies rules.
+- `open_economy/record.py` — Execution record and human-readable output.
+- `open_economy/reasoning.py` — Reasoning view for blocked acts and intermediates.
+
+---
+
+## 5) Testing
+
+### Web app
+```bash
+npm run test
+```
+
+### Python engine
+```bash
+python -m unittest
+```
+
+---
+
+## 6) Common Troubleshooting
+
+- **The app doesn’t load**: run `npm install` first, then `npm run dev`.
+- **Formula errors**: double-check variable names and functions (`min`, `max`, `log`, `exp`, `abs`).
+- **Weird numbers**: extreme parameter values can cause unstable results. Reset to defaults using the button in the UI.
